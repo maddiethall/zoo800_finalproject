@@ -1,12 +1,12 @@
 library(dplyr)
 library(ggplot2)
 library(ggeffects)
+library(emmeans)
 
-model_NN_dist = glm(
-  scratch ~ NN_dist * group,
-  data = scratch_data,
-  family = binomial
-)
+scratch_data = readRDS("cleaned_combined_data.rds")
+
+model_NN_dist = glm(scratch ~ NN_dist * group, data = scratch_data, family = binomial)
+summary(model_NN_dist)
 
 pred_NN_dist = ggpredict(model_NN_dist, terms = c("NN_dist", "group"))
 
@@ -28,18 +28,6 @@ ggplot(scratch_data, aes(x = NN_dist, y = scratch, color = group)) +
   labs(x = "Nearest neighbor distance (m)",
        y = "Probability of scratching",
        title = "Effect of NN distance on scratching")
-
-model_NN_dist2 <- glm(
-  scratch ~ NN_dist * group,
-  data = scratch_data,
-  family = binomial
-)
-
-pred_NN_dist2 = ggpredict(model_NN_dist2, terms = c("NN_dist", "group"))
-plot(pred_NN_dist_2) +
-  labs(x = "Nearest neighbor distance (m)",
-       y = "Predicted probability of scratching",
-       title = "Scratching probability vs. NN distance")
 
 
 scratch_by_bin = scratch_data %>%

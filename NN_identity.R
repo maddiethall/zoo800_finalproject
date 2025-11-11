@@ -1,6 +1,9 @@
 library(dplyr)
 library(ggplot2)
 library(ggeffects)
+library(emmeans)
+
+scratch_data = readRDS("cleaned_combined_data.rds")
 
 NN_identity = scratch_data %>%
   mutate(NN_age_sex = factor(NN_age_sex, levels = c("0", "J", "AF", "AM")))

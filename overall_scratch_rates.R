@@ -34,7 +34,10 @@ rates_overall = scratch_data %>%
   mutate(group = "Overall")
 
 rates_summary = bind_rows(rates_by_group, rates_overall)
+# overall rate: 0.17
+# AF: 0.15; AM: 0.21; J: 0.16
 
+# compare rates of other things too
 
 model_scratch = glm(scratch ~ group, data = scratch_data, family = binomial)
 summary(model_scratch)
