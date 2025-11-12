@@ -27,6 +27,7 @@ summary(model_social_simple)
 # AM: AMs’ reduction in scratching when social is slightly less than AFs, but not significant
 # JL|: Juveniles’ reduction in scratching when social is even stronger than AFs (p ≈ 0.012)
 
+
 emm_simple = emmeans(model_social_simple, ~ social_simple | group, type = "response")
 emm_simple_df = as.data.frame(emm_simple)
 emm_simple_df = emm_simple_df %>%
@@ -35,6 +36,7 @@ emm_simple_df = emm_simple_df %>%
     group == "J"  & social_simple == "Social" ~ "*",
     TRUE ~ ""
   ))
+
 ggplot(emm_simple_df, aes(x = social_simple, y = prob, fill = group)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
   geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL),
