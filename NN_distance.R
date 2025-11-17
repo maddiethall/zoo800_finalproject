@@ -2,6 +2,7 @@ library(dplyr)
 library(ggplot2)
 library(ggeffects)
 library(emmeans)
+library(car)
 
 scratch_data = readRDS("cleaned_combined_data.rds")
 
@@ -23,3 +24,8 @@ ggplot(pred_NN_dist, aes(x = x, y = predicted, color = group, fill = group)) +
     subtitle = "Predicted from logistic regression with group interaction"
   ) +
   theme_minimal(base_size = 13)
+
+Anova(model_NN_dist, type = "III")
+# distance is a significant predictor of scratching (p = 0.003)
+# group is a significant predictor of scratching (p = 0.006)
+# distance and group are significant (p < 0.001)

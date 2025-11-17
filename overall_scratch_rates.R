@@ -46,3 +46,4 @@ emmeans(model_scratch, pairwise ~ group, type = "response")
 # AMs are significantly more likely to scratch than AFs (p = 0.0312)
 # No difference between AFs and Js (p = 0.91)
 # No significant difference between AMs and Js (p = 0.25)
+

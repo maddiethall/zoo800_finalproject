@@ -25,10 +25,12 @@ model_social_simple = glm(scratch ~ social_simple * group, family = binomial, da
 summary(model_social_simple)
 # AF: scratching probability drops significantly in social contexts (p ≈ 0.0008)
 # AM: AMs’ reduction in scratching when social is slightly less than AFs, but not significant
-# JL|: Juveniles’ reduction in scratching when social is even stronger than AFs (p ≈ 0.012)
+# J: Juveniles’ reduction in scratching when social is even stronger than AFs (p ≈ 0.012)
+# overall negative effect of social context on scratching (p = 0.0001)
 
 
 emm_simple = emmeans(model_social_simple, ~ social_simple | group, type = "response")
+summary(emm_simple)
 emm_simple_df = as.data.frame(emm_simple)
 emm_simple_df = emm_simple_df %>%
   mutate(sig_label = case_when(
