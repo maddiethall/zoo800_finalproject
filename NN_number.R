@@ -3,13 +3,10 @@ library(ggplot2)
 library(ggeffects)
 library(emmeans)
 
-scratch_data = readRDS("cleaned_combined_data.rds")
+scratch_data = readRDS("data_final.rds")
 
-NN_data = social_data %>%
-  select(group, scratch, NN_within_2m, NN_2_to_5m, social_simple) %>%
-  mutate(NN_total = NN_within_2m + NN_2_to_5m)
 
-model_NN_number = glm(scratch ~ NN_total * group, data = NN_data, family = binomial) 
+model_NN_number = glm(scratch ~ NN_total * group, data = scratch_data, family = binomial) 
 summary(model_NN_number)
 # total NN is sig for AF (p = 0.003) and J (p = 0.002) - negative correlation
 # NS for adult male but same pattern
@@ -27,3 +24,5 @@ ggplot(pred_NN_number, aes(x = x, y = predicted, color = group, fill = group)) +
   theme_minimal(base_size = 13)
 
 
+Anova(model_NN_number, type = "III")
+# NN total and group interaction is a sig predictor (p = 0.0)

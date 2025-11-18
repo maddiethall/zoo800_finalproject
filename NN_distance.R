@@ -4,7 +4,8 @@ library(ggeffects)
 library(emmeans)
 library(car)
 
-scratch_data = readRDS("cleaned_combined_data.rds")
+scratch_data = readRDS("data_final.rds")
+
 
 model_NN_dist = glm(scratch ~ NN_dist * group, data = scratch_data, family = binomial)
 summary(model_NN_dist)

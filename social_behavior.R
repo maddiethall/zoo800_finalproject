@@ -3,25 +3,9 @@ library(ggplot2)
 library(ggeffects)
 library(emmeans)
 
-scratch_data = readRDS("cleaned_combined_data.rds")
+scratch_data = readRDS("data_final.rds")
 
-social_data = scratch_data %>%
-  mutate(social_any = groom + social_rest + social_other)
-
-scratch_rates_social = social_data %>%
-  group_by(group, social_any) %>%
-  summarise(
-    n_samples = n(),
-    n_scratches = sum(scratch, na.rm = TRUE),
-    scratch_rate = mean(scratch, na.rm = TRUE)
-  )
-
-social_data$social_any = factor(social_data$social_any)
-
-social_data$social_simple = ifelse(social_data$social_any == 0, 0, 1)
-social_data$social_simple = factor(social_data$social_simple, labels = c("Nonsocial", "Social"))
-
-model_social_simple = glm(scratch ~ social_simple * group, family = binomial, data = social_data)
+model_social_simple = glm(scratch ~ social_simple * group, family = binomial, data = scratch_data)
 summary(model_social_simple)
 # AF: scratching probability drops significantly in social contexts (p ≈ 0.0008)
 # AM: AMs’ reduction in scratching when social is slightly less than AFs, but not significant
@@ -56,11 +40,12 @@ ggplot(emm_simple_df, aes(x = social_simple, y = prob, fill = group)) +
 
 
 
-within_group_social = contrast(emm_simple, method = "pairwise", by = "group", adjust = "tukey") %>%
-  as.data.frame() %>%
-  mutate(sig = ifelse(p.value < 0.05, "*", "")) %>%
-  select(group, contrast, sig)
+within_group_social = contrast(emm_simple, method = "pairwise", by = "group", adjust = "tukey")
+summary(within_group_social)
 # Juveniles scratch much more when nonsocial; huge drop in social context (p < 0.0001)
 # AFs scratch significantly more when nonsocial than when social (p = 0.0008)
 
- 
+Anova(model_social_simple, type = "III")
+# social behavior is a significant predictor (p = 0.003)
+# group is significant (p = 0.002)
+# interaction is sig (p = 0.002)

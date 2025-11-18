@@ -4,9 +4,9 @@ library(ggeffects)
 library(emmeans)
 library(car)
 
-scratch_data = readRDS("cleaned_combined_data.rds")
+scratch_data = readRDS("data_final.rds")
 
-model_social_NN_simple = glm(scratch ~ NN_dist * social_simple, data = social_data, family = binomial)
+model_social_NN_simple = glm(scratch ~ NN_dist * social_simple, data = scratch_data, family = binomial)
 summary(model_social_NN_simple)
 # the slope of NN_dist changes when animals are social — it becomes steeper and positive, slightly lower baseline
 ## (p ≈ 0.057, nearly significant)
@@ -25,7 +25,7 @@ ggplot(preds_social_NN_simple, aes(x = x, y = predicted, color = group)) +
   theme_minimal(base_size = 14)
 
 
-model_social_NN = glm(scratch ~ NN_dist * social_simple * group, data = social_data, family = binomial)
+model_social_NN = glm(scratch ~ NN_dist * social_simple * group, data = scratch_data, family = binomial)
 summary(model_social_NN)
 # AF: sig effect of NN distance on scratching when social vs not
 # lower scratching prob during social behavior and close proximity 
@@ -49,7 +49,7 @@ ggplot(preds_social_NN, aes(x = x, y = predicted, color = group)) +
   ) +
   theme_minimal(base_size = 14)
 
-model_social_NN_number = glm(scratch ~ NN_total * social_simple * group, data = NN_data, family = binomial)
+model_social_NN_number = glm(scratch ~ NN_total * social_simple * group, data = scratch_data, family = binomial)
 summary(model_social_NN_number)
 # AF: significant interaction effect of NN_total and social_simple (p = 0.01; scratching increases with
 ## NN_number when nonsocial, decreases when social)
@@ -64,3 +64,9 @@ ggplot(preds_social_NN_number, aes (x = x, y = predicted, color = facet)) +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = facet), alpha = 0.15, color = NA) +
   facet_wrap(~group)
 
+Anova(model_social_NN_simple, type = "III")
+# no sig interaction between distance and social behavior is sig (p = 0.08)
+
+Anova(model_social_NN_number, type = "III")
+# sig predictor: total NN, social behavior, and group (p = 0.01)
+# sig predictor: total NN and social behavior (p = 0.005)
