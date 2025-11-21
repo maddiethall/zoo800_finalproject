@@ -26,6 +26,10 @@ ggplot(pred_NN_dist, aes(x = x, y = predicted, color = group, fill = group)) +
   ) +
   theme_minimal(base_size = 13)
 
+emtrends(model_NN_dist, ~ group, var = "NN_dist")
+pairs(emtrends(model_NN_dist, ~ group, var = "NN_dist"))
+
+
 Anova(model_NN_dist, type = "III")
 # distance is a significant predictor of scratching (p = 0.003)
 # group is a significant predictor of scratching (p = 0.006)

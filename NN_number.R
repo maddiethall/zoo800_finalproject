@@ -8,7 +8,7 @@ scratch_data = readRDS("data_final.rds")
 
 model_NN_number = glm(scratch ~ NN_total * group, data = scratch_data, family = binomial) 
 summary(model_NN_number)
-# total NN is sig for AF (p = 0.003) and J (p = 0.002) - negative correlation
+# total NN is sig for AF (p = 0.003) - negative correlation
 # NS for adult male but same pattern
 # interaction effect for J (p = 0.008) -  steeper negative correlation
 
@@ -25,4 +25,8 @@ ggplot(pred_NN_number, aes(x = x, y = predicted, color = group, fill = group)) +
 
 
 Anova(model_NN_number, type = "III")
-# NN total and group interaction is a sig predictor (p = 0.0)
+# NN total and group interaction is a sig predictor (p = 0.0002)
+
+
+emtrends(model_NN_number, ~ group, var = "NN_total")
+pairs(emtrends(model_NN_number, ~ group, var = "NN_total"))

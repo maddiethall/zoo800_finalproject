@@ -34,6 +34,9 @@ summary(model_social_NN)
 # J: strongest distance effect, social line rises faster
 # interaction between NN distance and social context across groups is NS
 
+Anova(model_social_NN, type = "III")
+# between groups is NS
+
 preds_social_NN = ggpredict(model_social_NN, terms = c("NN_dist [all]", "social_simple", "group"))
 
 ggplot(preds_social_NN, aes(x = x, y = predicted, color = group)) +
@@ -64,9 +67,12 @@ ggplot(preds_social_NN_number, aes (x = x, y = predicted, color = facet)) +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = facet), alpha = 0.15, color = NA) +
   facet_wrap(~group)
 
-Anova(model_social_NN_simple, type = "III")
-# no sig interaction between distance and social behavior is sig (p = 0.08)
+
 
 Anova(model_social_NN_number, type = "III")
 # sig predictor: total NN, social behavior, and group (p = 0.01)
 # sig predictor: total NN and social behavior (p = 0.005)
+
+(emtrends(model_social_NN_number, ~ social_simple * group, var = "NN_total"))
+pairs(slopes, by = "social_simple")
+

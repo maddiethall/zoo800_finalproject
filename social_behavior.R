@@ -41,9 +41,14 @@ ggplot(emm_simple_df, aes(x = social_simple, y = prob, fill = group)) +
 
 
 within_group_social = contrast(emm_simple, method = "pairwise", by = "group", adjust = "tukey")
-summary(within_group_social)
+within_group_social
 # Juveniles scratch much more when nonsocial; huge drop in social context (p < 0.0001)
 # AFs scratch significantly more when nonsocial than when social (p = 0.0008)
+
+
+between_group_social = contrast(emm_simple, method = "pairwise", by = "social_simple", adjust = "tukey")
+between_group_social
+
 
 Anova(model_social_simple, type = "III")
 # social behavior is a significant predictor (p = 0.003)

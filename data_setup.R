@@ -16,7 +16,9 @@ scratch_data = scratch_data %>%
 scratch_data = scratch_data %>%
   mutate(NN_total = NN_within_2m + NN_2_to_5m)
 
-saveRDS(scratch_data, "data_final")
+scratch_data$group = factor(scratch_data$group, labels = c("AF", "AM", "J"))
+
+saveRDS(scratch_data, "data_final.rds")
 
 
 
