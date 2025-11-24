@@ -19,12 +19,19 @@ ggplot(pred_NN_dist, aes(x = x, y = predicted, color = group, fill = group)) +
   geom_line(linewidth = 1.2) +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2, color = NA) +
   labs(
-    x = "Nearest neighbor distance (m)",
-    y = "Predicted probability of scratching",
-    title = "Effect of nearest neighbor distance on scratching",
-    subtitle = "Predicted from logistic regression with group interaction"
+    x = "Nearest Neighbor Distance (m)",
+    y = "Predicted Probability of Scratching"
   ) +
-  theme_minimal(base_size = 13)
+  theme_minimal(base_size = 13) +
+  group_scales() +
+  scale_color_manual(values = group_colors, name = NULL) +
+  scale_fill_manual(values = group_colors, name = NULL) +
+  theme(
+    axis.title.x = element_text(size = 13,
+                                margin = margin(t = 10)),
+    axis.title.y = element_text(size = 13,
+                                margin = margin(r = 10))
+  ) 
 
 emtrends(model_NN_dist, ~ group, var = "NN_dist")
 pairs(emtrends(model_NN_dist, ~ group, var = "NN_dist"))

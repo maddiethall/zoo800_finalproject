@@ -63,13 +63,30 @@ summary(model_social_NN_number)
 
 preds_social_NN_number = ggpredict(model_social_NN_number, terms = c("NN_total", "social_simple", "group"))
 ggplot(preds_social_NN_number, aes (x = x, y = predicted, color = facet)) +
+  labs(
+    x = "Number of Nearest Neighbors",
+    y = "Predicted Probability of Scratching"
+  ) +
+  theme_minimal(base_size = 13) +
+  group_scales() +
   geom_smooth() +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = facet), alpha = 0.15, color = NA) +
-  facet_wrap(~group)
+  facet_wrap(~group) +
+  scale_color_manual(values = group_colors, name = NULL) +
+  scale_fill_manual(values = group_colors, name = NULL) +
+  theme(
+    axis.title.x = element_text(size = 13,
+                                margin = margin(t = 10)),
+    axis.title.y = element_text(size = 13,
+                                margin = margin(r = 10)),
+    axis.title.x.top = element_text(size = 13)
+  ) 
+  
+  
 
 
 
-Anova(model_social_NN_number, type = "III")
+sAnova(model_social_NN_number, type = "III")
 # sig predictor: total NN, social behavior, and group (p = 0.01)
 # sig predictor: total NN and social behavior (p = 0.005)
 

@@ -29,14 +29,21 @@ ggplot(emm_simple_df, aes(x = social_simple, y = prob, fill = group)) +
                 width = 0.2, position = position_dodge(width = 0.8)) +
   geom_text(aes(label = sig_label, y = prob + 0.05),
             position = position_dodge(width = 0.8), size = 5) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 0.5)) +
-  labs(x = "Social context",
-       y = "Predicted scratch probability",
-       fill = "Group",
-       title = "Scratch probability by social context and group",
-       subtitle = "* indicates significant drop from nonsocial to social") +
-  theme_minimal(base_size = 14) +
-  scale_fill_brewer(palette = "Set2")
+  scale_y_continuous(labels = scales::number_format(accuracy = .1), limits = c(0, 0.5)) +
+  labs(
+    x = NULL,
+    y = "Predicted Probability of Scratching"
+    ) +
+  theme_minimal(base_size = 13) +
+  group_scales() +
+  scale_color_manual(values = group_colors, name = NULL) +
+  scale_fill_manual(values = group_colors, name = NULL) +
+  theme(
+    axis.title.x = element_text(size = 13),
+    axis.title.y = element_text(size = 13, 
+                                margin = margin(r = 10)),
+    axis.text.x = element_text(size = 12)
+  )
 
 
 

@@ -21,6 +21,18 @@ scratch_data$group = factor(scratch_data$group, labels = c("AF", "AM", "J"))
 saveRDS(scratch_data, "data_final.rds")
 
 
+group_colors = c(
+  "AF" = "#D81B60",
+  "AM" = "#5F6F52",
+  "J"  = "#6A0DAD"
+)
+group_scales = function() {
+  list(
+    scale_color_manual(values = group_colors),
+    scale_fill_manual(values = group_colors)
+  )
+}
+
 
 
 

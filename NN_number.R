@@ -21,7 +21,16 @@ ggplot(pred_NN_number, aes(x = x, y = predicted, color = group, fill = group)) +
     x = "Number of Nearest Neighbors",
     y = "Predicted probability of scratching"
   ) +
-  theme_minimal(base_size = 13)
+  theme_minimal(base_size = 13) +
+  group_scales() +
+  scale_color_manual(values = group_colors, name = NULL) +
+  scale_fill_manual(values = group_colors, name = NULL) +
+  theme(
+    axis.title.x = element_text(size = 13,
+                                margin = margin(t = 10)),
+    axis.title.y = element_text(size = 13,
+                                margin = margin(r = 10))
+  ) 
 
 
 Anova(model_NN_number, type = "III")
