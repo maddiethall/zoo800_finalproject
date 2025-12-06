@@ -25,7 +25,7 @@ ggplot(preds_social_NN_simple, aes(x = x, y = predicted, color = group)) +
   theme_minimal(base_size = 14)
 
 
-model_social_NN = glm(scratch ~ NN_dist * social_simple * group, data = scratch_data, family = binomial)
+model_social_NN_dist = glm(scratch ~ NN_dist * social_simple * group, data = scratch_data, family = binomial)
 summary(model_social_NN)
 # AF: sig effect of NN distance on scratching when social vs not
 # lower scratching prob during social behavior and close proximity 
@@ -34,12 +34,12 @@ summary(model_social_NN)
 # J: strongest distance effect, social line rises faster
 # interaction between NN distance and social context across groups is NS
 
-Anova(model_social_NN, type = "III")
+Anova(model_social_NN_dist, type = "III")
 # between groups is NS
 
-preds_social_NN = ggpredict(model_social_NN, terms = c("NN_dist [all]", "social_simple", "group"))
+preds_social_NN_dist = ggpredict(model_social_NN_dist, terms = c("NN_dist [all]", "social_simple", "group"))
 
-ggplot(preds_social_NN, aes(x = x, y = predicted, color = group)) +
+ggplot(preds_social_NN_dist, aes(x = x, y = predicted, color = group)) +
   geom_line(size = 1) +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.15, color = NA) +
   facet_wrap(~facet) +
