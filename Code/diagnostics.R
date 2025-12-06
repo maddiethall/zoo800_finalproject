@@ -15,7 +15,7 @@ vif(model_NN_dist)
 # all values under 5, no problematic multicollinearity
 
 
-vif_df = as.data.frame(vif(model_social_NN)) |>
+vif_df = as.data.frame(vif(model_social_NN_dist)) |>
   tibble::rownames_to_column("Predictor") |>
   rename(GVIF = GVIF, Df = Df, Adj_GVIF = `GVIF^(1/(2*Df))`)
 
