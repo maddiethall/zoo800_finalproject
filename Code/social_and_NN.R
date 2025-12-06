@@ -92,4 +92,3 @@ sAnova(model_social_NN_number, type = "III")
 
 (emtrends(model_social_NN_number, ~ social_simple * group, var = "NN_total"))
 pairs(slopes, by = "social_simple")
-
