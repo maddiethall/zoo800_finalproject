@@ -61,3 +61,25 @@ Anova(model_social_simple, type = "III")
 # social behavior is a significant predictor (p = 0.003)
 # group is significant (p = 0.002)
 # interaction is sig (p = 0.002)
+
+
+
+coef_table_social <- tidy(model_social_simple) %>%
+  mutate(
+    signif = p.value < 0.05,
+    term = ifelse(signif, paste0(term, "**"), term),
+    estimate = ifelse(signif, paste0(round(estimate,3)), round(estimate,3)),
+    std.error = ifelse(signif, paste0(round(std.error,3)), round(std.error,3)),
+    statistic = ifelse(signif, paste0(round(statistic,3)), round(statistic,3)),
+    p.value = ifelse(signif,
+                     ifelse(p.value < .001, "<0.001***",
+                            paste0(round(p.value,3), "**")),
+                     round(p.value,3))
+  ) %>%
+  select(term, estimate, std.error, statistic, p.value)  # <-- remove 'signif'
+
+kable(coef_table_social,
+      escape = FALSE,
+      caption = "Coefficient Estimates for Social Behavior Logistic Regression Model",
+      col.names = c("Term","Estimate","Std. Error","z","p")) %>%
+  kable_classic(full_width = FALSE)

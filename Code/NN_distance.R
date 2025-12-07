@@ -41,3 +41,25 @@ Anova(model_NN_dist, type = "III")
 # distance is a significant predictor of scratching (p = 0.003)
 # group is a significant predictor of scratching (p = 0.006)
 # distance and group are significant (p < 0.001)
+
+
+
+coef_table_dist <- tidy(model_NN_dist) %>%
+  mutate(
+    signif = p.value < 0.05,
+    term = ifelse(signif, paste0(term, "**"), term),
+    estimate = ifelse(signif, paste0(round(estimate,3)), round(estimate,3)),
+    std.error = ifelse(signif, paste0(round(std.error,3)), round(std.error,3)),
+    statistic = ifelse(signif, paste0(round(statistic,3)), round(statistic,3)),
+    p.value = ifelse(signif,
+                     ifelse(p.value < .001, "<0.001***",
+                            paste0(round(p.value,3), "**")),
+                     round(p.value,3))
+  ) %>%
+  select(term, estimate, std.error, statistic, p.value)  # <-- remove 'signif'
+
+kable(coef_table_dist,
+      escape = FALSE,
+      caption = "Coefficient Estimates for NN Distance Logistic Regression Model",
+      col.names = c("Term","Estimate","Std. Error","z","p")) %>%
+  kable_classic(full_width = FALSE)

@@ -26,7 +26,7 @@ ggplot(preds_social_NN_simple, aes(x = x, y = predicted, color = group)) +
 
 
 model_social_NN_dist = glm(scratch ~ NN_dist * social_simple * group, data = scratch_data, family = binomial)
-summary(model_social_NN)
+summary(model_social_NN_dist)
 # AF: sig effect of NN distance on scratching when social vs not
 # lower scratching prob during social behavior and close proximity 
 # and scratching increases during social behavior as NN distance increases (p = 0.029)
@@ -62,6 +62,8 @@ summary(model_social_NN_number)
 ## part, scratch decreases with NN_number)
 
 preds_social_NN_number = ggpredict(model_social_NN_number, terms = c("NN_total", "social_simple", "group"))
+
+
 ggplot(preds_social_NN_number, aes (x = x, y = predicted, color = facet)) +
   labs(
     x = "Number of Nearest Neighbors",
@@ -82,13 +84,37 @@ ggplot(preds_social_NN_number, aes (x = x, y = predicted, color = facet)) +
     axis.title.x.top = element_text(size = 13)
   ) 
   
-  
+
+
+library(broom)
+library(dplyr)
+library(kableExtra)
+
+coef_table_social_number <- tidy(model_social_NN_number) %>%
+  mutate(
+    signif = p.value < 0.05,
+    term = ifelse(signif, paste0(term, "**"), term),
+    estimate = ifelse(signif, paste0(round(estimate,3)), round(estimate,3)),
+    std.error = ifelse(signif, paste0(round(std.error,3)), round(std.error,3)),
+    statistic = ifelse(signif, paste0(round(statistic,3)), round(statistic,3)),
+    p.value = ifelse(signif,
+                     ifelse(p.value < .001, "<0.001***",
+                            paste0(round(p.value,3), "**")),
+                     round(p.value,3))
+  ) %>%
+  select(term, estimate, std.error, statistic, p.value)  # <-- remove 'signif'
+
+kable(coef_table_social_number,
+      escape = FALSE,
+      caption = "Coefficient Estimates for Best-Fitting Logistic Regression Model",
+      col.names = c("Term","Estimate","Std. Error","z","p")) %>%
+  kable_classic(full_width = FALSE)
 
 
 
-sAnova(model_social_NN_number, type = "III")
+
+Anova(model_social_NN_number, type = "III")
 # sig predictor: total NN, social behavior, and group (p = 0.01)
 # sig predictor: total NN and social behavior (p = 0.005)
 
 (emtrends(model_social_NN_number, ~ social_simple * group, var = "NN_total"))
-pairs(slopes, by = "social_simple")

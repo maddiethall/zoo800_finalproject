@@ -39,3 +39,24 @@ Anova(model_NN_number, type = "III")
 
 emtrends(model_NN_number, ~ group, var = "NN_total")
 pairs(emtrends(model_NN_number, ~ group, var = "NN_total"))
+
+
+coef_table_number <- tidy(model_NN_number) %>%
+  mutate(
+    signif = p.value < 0.05,
+    term = ifelse(signif, paste0(term, "**"), term),
+    estimate = ifelse(signif, paste0(round(estimate,3)), round(estimate,3)),
+    std.error = ifelse(signif, paste0(round(std.error,3)), round(std.error,3)),
+    statistic = ifelse(signif, paste0(round(statistic,3)), round(statistic,3)),
+    p.value = ifelse(signif,
+                     ifelse(p.value < .001, "<0.001***",
+                            paste0(round(p.value,3), "**")),
+                     round(p.value,3))
+  ) %>%
+  select(term, estimate, std.error, statistic, p.value)  # <-- remove 'signif'
+
+kable(coef_table_number,
+      escape = FALSE,
+      caption = "Coefficient Estimates for NN Number Logistic Regression Model",
+      col.names = c("Term","Estimate","Std. Error","z","p")) %>%
+  kable_classic(full_width = FALSE)
