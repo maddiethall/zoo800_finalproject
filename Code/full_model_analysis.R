@@ -10,6 +10,8 @@ model_social_NN_number = glm(scratch ~ NN_total * social_simple * group, data = 
 summary(model_social_NN_number)
 
 preds_social_NN_number = ggpredict(model_social_NN_number, terms = c("NN_total", "social_simple", "group"))
+preds_NN_number = ggpredict(model_social_NN_number, terms = c("NN_total", "group"))
+preds_social = ggpredict(model_social_NN_number, terms = c("social_simple", "group"))
 
 baseline_eff <- ggpredict(
   model_social_NN_number,
@@ -38,6 +40,7 @@ ggplot(baseline_eff, aes(x = x, y = predicted, fill = group)) +
   ) 
 
 
+
 heat = ggpredict(
   model_social_NN_number,
   terms = c("NN_total [all]", "social_simple", "group")
@@ -55,3 +58,64 @@ ggplot(heat, aes(x = x, y = group, fill = predicted)) +
     y = "Social Context"
   ) +
   theme_bw(base_size = 13)
+
+
+ggplot(preds_social_NN_number, aes (x = x, y = predicted, color = group)) +
+  labs(
+    x = "Number of Nearest Neighbors",
+    y = "Predicted Probability of Scratching"
+  ) +
+  geom_smooth() +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.15, color = NA) +
+  facet_wrap(~facet) +
+  theme_minimal(base_size = 13) +
+  scale_color_manual(values = c("Nonsocial" = "#5F6F52", "Social" = "#D81B60"),
+                     name = "Social Context") +
+  scale_fill_manual(values = c("Nonsocial" = "#5F6F52", "Social" = "#D81B60"),
+                    name = "Social Context") +
+  theme(
+    axis.title.x = element_text(size = 13,
+                                margin = margin(t = 10)),
+    axis.title.y = element_text(size = 13,
+                                margin = margin(r = 10)),
+    axis.title.x.top = element_text(size = 13)
+  ) 
+
+ggplot(preds_NN_number, aes (x = x, y = predicted, color = group)) +
+  labs(
+    x = "Number of Nearest Neighbors",
+    y = "Predicted Probability of Scratching"
+  ) +
+  geom_smooth() +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.15, color = NA) +
+  theme_minimal(base_size = 13) +
+  scale_color_manual(values = group_colors, name = "Age-Sex Class") +
+  scale_fill_manual(values = group_colors, name = "Age-Sex Class") +
+  theme(
+    axis.title.x = element_text(size = 13,
+                                margin = margin(t = 10)),
+    axis.title.y = element_text(size = 13,
+                                margin = margin(r = 10)),
+    axis.title.x.top = element_text(size = 13)
+  )
+
+
+
+
+
+ggplot(model_social_NN_number, aes(x = NN_total, y = scratch, color = group)) +
+  geom_smooth(method = "glm", method.args = list(family = "binomial")) +
+  labs(
+    x = "Number of Nearest Neighbors",
+    y = "Probability of Scratching",
+    color = "Age–Sex Class"
+  ) +
+  theme_minimal(base_size = 13) +
+  scale_color_manual(values = c("#D81B60", "#5F6F52", "#6A0DAD")) +
+  theme(
+    axis.title.x = element_text(size = 13,
+                                margin = margin(t = 10)),
+    axis.title.y = element_text(size = 13,
+                                margin = margin(r = 10)),
+    axis.title.x.top = element_text(size = 13)
+  )

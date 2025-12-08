@@ -90,26 +90,49 @@ library(broom)
 library(dplyr)
 library(kableExtra)
 
+library(dplyr)
+library(broom)
+library(knitr)
+library(kableExtra)
+
 coef_table_social_number <- tidy(model_social_NN_number) %>%
   mutate(
-    signif = p.value < 0.05,
-    term = ifelse(signif, paste0(term, "**"), term),
-    estimate = ifelse(signif, paste0(round(estimate,3)), round(estimate,3)),
-    std.error = ifelse(signif, paste0(round(std.error,3)), round(std.error,3)),
-    statistic = ifelse(signif, paste0(round(statistic,3)), round(statistic,3)),
-    p.value = ifelse(signif,
-                     ifelse(p.value < .001, "<0.001***",
-                            paste0(round(p.value,3), "**")),
-                     round(p.value,3))
+    stars = case_when(
+      p.value < 0.001 ~ "&#42;&#42;&#42;",
+      p.value < 0.01  ~ "&#42;&#42;",
+      p.value < 0.05  ~ "&#42;",
+      TRUE            ~ ""
+    ),
+    
+    estimate  = formatC(estimate,  format = "f", digits = 3),
+    std.error = formatC(std.error, format = "f", digits = 3),
+    statistic = formatC(statistic, format = "f", digits = 3),
+    
+    pval_text = ifelse(
+      p.value < 0.001,
+      "&lt;0.001",
+      formatC(p.value, format = "f", digits = 3)
+    ),
+    
+    raw_term  = paste0(term, stars),
+    raw_pval  = paste0(pval_text, stars),
+    
+    term = ifelse(stars != "",
+                  paste0("<strong>", raw_term, "</strong>"),
+                  raw_term),
+    
+    p.value = ifelse(stars != "",
+                     paste0("<strong>", raw_pval, "</strong>"),
+                     raw_pval)
   ) %>%
-  select(term, estimate, std.error, statistic, p.value)  # <-- remove 'signif'
+  select(term, estimate, std.error, statistic, p.value)
 
 kable(coef_table_social_number,
+      format = "html",
       escape = FALSE,
       caption = "Coefficient Estimates for Best-Fitting Logistic Regression Model",
       col.names = c("Term","Estimate","Std. Error","z","p")) %>%
   kable_classic(full_width = FALSE)
-
 
 
 
