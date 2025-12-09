@@ -100,9 +100,6 @@ ggplot(preds_NN_number, aes (x = x, y = predicted, color = group)) +
   )
 
 
-
-
-
 ggplot(model_social_NN_number, aes(x = NN_total, y = scratch, color = group)) +
   geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   labs(
