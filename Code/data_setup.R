@@ -23,7 +23,7 @@ saveRDS(scratch_data, "data_final.rds")
 
 group_colors = c(
   "AF" = "#D81B60",
-  "AM" = "#5F6F52",
+  "AM" = "#0B6623",
   "J"  = "#6A0DAD"
 )
 group_scales = function() {
