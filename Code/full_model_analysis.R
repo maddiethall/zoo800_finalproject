@@ -148,9 +148,6 @@ ggplot(model_social_NN_number, aes(x = NN_total, y = scratch, color = group)) +
 
 
 
-
-
-
 emtrends(
   model_social_NN_number,
   ~ social_simple | group,
@@ -160,38 +157,17 @@ emtrends(
 pairs(
   emtrends(model_social_NN_number,
            ~ social_simple | group,
-           var = "NN_total")
-)
+           var = "NN_total"))
 
 
-slopes_by_group <- emtrends(
+emtr = emtrends(
   model_social_NN_number,
-  ~ group | social_simple,
-  var = "NN_total"
+  ~ social_simple * group,
+  var = "NN_total",
+  type = "response"
 )
 
-slope_df <- as.data.frame(slopes_by_group)
-
-trend_df <- as.data.frame(
-  emtrends(
-    model_social_NN_number,
-    ~ social_simple | group,
-    var = "NN_total"
-  )
-)
-
-ggplot(slope_df,
-       aes(x = NN_total.trend,
-           y = interaction(group, social_simple),
-           color = group)) +
-  geom_point(size = 3) +
-  geom_errorbarh(aes(xmin = asymp.LCL,
-                     xmax = asymp.UCL),
-                 height = 0.2) +
-  facet_wrap(~ social_simple) +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  theme_minimal()
-
+emtr_df = as.data.frame(emtr)
 
 ggplot(emtr_df,
        aes(x = social_simple,
@@ -224,100 +200,4 @@ ggplot(emtr_df,
                                 margin = margin(r = 10))
   )
 
-ggplot(emtr_df,
-       aes(x = social_simple,
-           y = NN_total.trend,
-           color = group)) +
-  geom_point(position = position_dodge(width = 0.4),
-             size = 3) +
-  geom_errorbar(aes(ymin = asymp.LCL,
-                    ymax = asymp.UCL),
-                width = 0.2,
-                position = position_dodge(width = 0.4),
-                size = 1) +
-  geom_hline(yintercept = 0,
-             linetype = "dashed",
-             color = "black") +
-  facet_wrap(~ group) +
-  labs(
-    x = "Age–Sex Class",
-    y = "Effect of Nearest Neighbors on Scratching (Log-Odds)",
-    color = "Social Context"
-  ) +
-  
-  scale_color_manual(values = c(
-    "Nonsocial" = "#0B6623",
-    "Social" = "#6A0DAD"
-  )) +
-  theme_minimal(base_size = 13) +
-  theme(
-    axis.title.x = element_text(size = 13,
-                                margin = margin(t = 10)),
-    axis.title.y = element_text(size = 13,
-                                margin = margin(r = 10))
-  )
 
-
-
-
-emm_plot <- emmeans(
-  model_social_NN_number,
-  ~ social_simple | group,
-  type = "response"
-)
-
-emm_df <- as.data.frame(emm_plot)
-
-
-ggplot(emm_df, aes(x = social_simple, y = prob, group = group)) +
-  geom_line(linewidth = 1.5) +
-  geom_point(size = 4) +
-  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL),
-                width = 0.08,
-                linewidth = 1.2) +
-  facet_wrap(~ group) +
-  labs(
-    x = "Social Context",
-    y = "Predicted Probability of Scratching"
-  ) +
-  theme_minimal(base_size = 18) +
-  theme(
-    strip.text = element_text(size = 18, face = "bold"),
-    axis.title = element_text(size = 20),
-    axis.text = element_text(size = 16),
-    legend.position = "none"
-  ) 
-
-
-library(emmeans)
-library(dplyr)
-library(ggplot2)
-
-# Get marginal trends (slopes) on response scale
-emtr <- emtrends(
-  model_social_NN_number,
-  ~ social_simple * group,
-  var = "NN_total",
-  type = "response"
-)
-
-# Convert to dataframe
-emtr_df <- as.data.frame(emtr)
-
-# Plot
-ggplot(emtr_df,
-       aes(x = group,
-           y = NN_total.trend,
-           color = social_simple,
-           group = social_simple)) +
-  geom_point(position = position_dodge(width = 0.4), size = 3) +
-  geom_errorbar(aes(ymin = asymp.LCL,
-                    ymax = asymp.UCL),
-                width = 0.2,
-                position = position_dodge(width = 0.4)) +
-  labs(
-    x = "Age–Sex Class",
-    y = "Change in Probability of Scratching\nper Additional Neighbor",
-    color = "Social Context"
-  ) +
-  theme_minimal(base_size = 13)
