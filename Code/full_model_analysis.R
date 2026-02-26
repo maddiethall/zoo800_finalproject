@@ -3,6 +3,7 @@ library(ggplot2)
 library(ggeffects)
 library(emmeans)
 library(car)
+library(tidyr)
 
 scratch_data = readRDS("data_final.rds")
 
@@ -199,5 +200,4 @@ ggplot(emtr_df,
     axis.title.y = element_text(size = 13,
                                 margin = margin(r = 10))
   )
-
 
