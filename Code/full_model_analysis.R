@@ -14,32 +14,6 @@ preds_social_NN_number = ggpredict(model_social_NN_number, terms = c("NN_total",
 preds_NN_number = ggpredict(model_social_NN_number, terms = c("NN_total", "group"))
 preds_social = ggpredict(model_social_NN_number, terms = c("social_simple", "group"))
 
-baseline_eff <- ggpredict(
-  model_social_NN_number,
-  terms = c("group", "social_simple"),
-  at = list(NN_total = 0)
-)
-
-ggplot(baseline_eff, aes(x = x, y = predicted, fill = group)) +
-  geom_col(position = position_dodge(0.7), width = 0.6, alpha = 0.8) +
-  geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
-                position = position_dodge(0.7), width = 0.15) +
-  scale_fill_manual(
-    values = c("Nonsocial" = "#5F6F52", "Social" = "#6A0DAD"),
-    name = "Social Context") +
-  labs(
-    x = "Age–Sex Class",
-    y = "Predicted Probability of Scratching"
-  ) +
-  theme_bw(base_size = 13) +
-  theme(
-    axis.title.x = element_text(size = 13,
-                                margin = margin(t = 10)),
-    axis.title.y = element_text(size = 13,
-                                margin = margin(r = 10)),
-    axis.title.x.top = element_text(size = 13)
-  ) 
-
 
 
 heat = ggpredict(

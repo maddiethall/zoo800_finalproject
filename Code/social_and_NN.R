@@ -141,3 +141,5 @@ Anova(model_social_NN_number, type = "III")
 # sig predictor: total NN and social behavior (p = 0.005)
 
 (emtrends(model_social_NN_number, ~ social_simple * group, var = "NN_total"))
+
+
